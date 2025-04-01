@@ -13,32 +13,63 @@
 ********************************************************************************/
 const authData = require('./modules/auth-service');
 const express = require('express');
-//const mongoose = require('mongoose'); 
+const clientSessions = require('client-sessions'); 
 const app = express(); 
 const projectsContainer = require('./modules/projects'); 
 const PORT = process.env.PORT || 3000;
-const path = require('path');
 
 app.set('view engine', 'ejs'); 
 app.set('views', __dirname + '/views'); 
 
 projectsContainer.Initialize()
-.then(() => {
-    app.listen(PORT, () => {   
-        console.log(`Server is listening on http://localhost:${PORT}`)
+    .then(authData.initialize)
+    .then(function() {
+        app.listen(PORT, () => {   
+                console.log(`Server is listening on http://localhost:${PORT}`)
+        });
+    }).catch(function(error) {
+        console.log(`Unable to start server" ${error}`); 
     });
 
     app.use(express.static(__dirname + '/public'));
 
+    /* Middle ware for client sessions  */
     // used to parse URL-encoded form data and make it available in req. body
-    app.use(express.urlencoded({ extended: true })); 
+    app.use(express.urlencoded({ extended: true }));
+
+    app.use(
+        clientSessions({
+            cookieName: 'session', 
+            secret: process.env.SESSION_SECRET, // generated a  random secret using command node -e console.log(require('crypto').randomBytes(32).toString('hex')), 
+            duration: 4 * 60 * 1000, // duration of session in ms (4 minutes)
+            activeDuration: 1000 * 60, // length of time session will be extended by 
+        })
+    ); 
+
+    // middleware to make sure all templates will have access to a "session" object
+    // important to conditionally show or hide elements to the user (depends if logged in or not)
+    app.use((req, res, next) => {
+        res.locals.session = req.session; 
+        next(); 
+    }); 
+
+    // helper middleware function 
+    // checks if a user is logged in - will be used in post and category routes 
+    // if user not logged in, redirect them back to the login page 
+    const ensureLogin = (req, res, next) => {
+        if (!req.session.user) { // user not logged in 
+            res.redirect('/login'); 
+        } else {
+            next(); // moves execution to the next middleware function in the req-response cycle 
+        }
+    }
 
     app.get('/', (req, res) => {
-        res.render("home"); 
+        res.render('home'); 
     }); 
 
     app.get('/about', (req, res) => {
-        res.render("about"); 
+        res.render('about'); 
     }); 
 
     app.get('/solutions/projects', async (req, res) => {
@@ -137,10 +168,4 @@ app.get('/solutions/deleteProject/:id', async (req, res) => {
     } catch (error) {
         res.render("500", { message: `I'm sorry, but we have encountered the following error: ${error}` });
     }
-})
-})
-
-
-.catch((error) => {
-    console.error("Failed to initialize projects", error.message);
-});
+}); 

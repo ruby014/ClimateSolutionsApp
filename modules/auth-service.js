@@ -31,7 +31,7 @@ let User; // to be defined on new connection (see 'initialize')
 - or with async/await and try/catch 
 */
 
-initialize = () => {
+let initialize = () => {
     return new Promise(function(resolve, reject) {
         let db = mongoose.createConnection(process.env.MONGODB); 
 
@@ -46,7 +46,7 @@ initialize = () => {
     });
 }
 
-registerUser = (userData) => {
+let registerUser = (userData) => {
     // needs to validate data 
     // e.g. matching passwords? or username taken? 
 
@@ -77,7 +77,7 @@ registerUser = (userData) => {
     }); 
 } 
 
-checkUser = (userData) => {
+let checkUser = (userData) => {
     return new Promise((resolve, reject) => {
         User.find({ userName: userData.userName })
         .exec()
@@ -86,7 +86,7 @@ checkUser = (userData) => {
                 reject(`Unable to find user: ${userData.userName}`); 
             } else if (users[0].password != userData.password) {
                 reject(`Incorrect Password for user: ${userData.userName}`); 
-            } else /*if (users[0].password === userData.password)*/ {
+            } else if (users[0].password === userData.password) {
                 // check if there are 8 login history items (max) 
                 // if so, pop last element from array 
                 if (users[0].loginHistory.length === 8) {
@@ -117,3 +117,5 @@ checkUser = (userData) => {
         })
     }); 
 }
+
+module.exports = { initialize, registerUser, checkUser }; 
