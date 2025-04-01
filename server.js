@@ -64,6 +64,52 @@ projectsContainer.Initialize()
         }
     }
 
+    // new routes: for logging in and registering 
+    app.get('/login', (req, res) => {
+        res.render('login', { errorMessage: "", userName: "" }); 
+    }); 
+
+    app.get('/register', (req, res) => {
+        res.render('register', { errorMessage: "", successMessage: "", userName: "" }); 
+    }); 
+
+    app.post('/register', async (req, res) => {
+        try {
+            await authData.registerUser(req.body); 
+            res.render('register', { errorMessage: "", successMessage: "User created", userName: "" }); 
+        } catch (error) {
+            res.render('register', { errorMessage: error, successMessage: "", userName: req.body.userName });
+        }
+    }); 
+
+    app.post('/login', (req, res) => {
+        req.body.userAgent = req.get('User-Agent'); 
+        authData.checkUser(req.body)
+        .then((user) => {
+            res.session.user = {
+                userName: user.userName, 
+                email: user.email, 
+                loginHistory: user.loginHistory
+            }
+
+            res.redirect('/solutions/projects'); 
+        })
+        .catch((error) => {
+            res.render('/login', { errorMessage: error, userName: req.body.userName });
+        });
+    }); 
+
+    app.get('/logout', (req, res) => {
+        req.session.reset(); 
+        res.redirect('/'); 
+    }); 
+
+    app.get('/userHistory', ensureLogin, (req, res) => {
+        res.render('userHistory');
+    }); 
+
+    // end of middleware for logging and registering 
+
     app.get('/', (req, res) => {
         res.render('home'); 
     }); 
