@@ -1,0 +1,29 @@
+   <!-- Navbar -->
+   <div class="navbar bg-base-100">
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl" href="/">Climate Solutions</a>
+    </div>
+
+     <!-- responsive navbar -->
+     <details class="dropdown">
+      <summary class="btn btn-ghost sm:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
+        </svg>
+      </summary>
+      <ul class="menu menu-sm dropdown-content right-0 mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <li><a class="<%= (page == "/solutions/projects") ? 'active' : '' %>" href="/solutions/projects">View Projects</a></li>
+        <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+        <li><a class="<%= (page == "/solutions/addProject") ? 'active' : '' %>" href="/solutions/addProject">Add Project</a></li>
+      </ul>
+    </details>
+
+    <!-- normal navbar -->
+    <div class="navbar-center hidden sm:flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a class="<%= (page == "/solutions/projects") ? 'active' : '' %>" href="/solutions/projects">View Projects</a></li>
+        <li><a class="<%= (page == "/about") ? 'active' : '' %>" href="/about">About</a></li>
+        <li><a class="<%= (page == "/solutions/addProject") ? 'active' : '' %>" href="/solutions/addProject">Add Project</a></li>
+      </ul>
+    </div>
+  </div>

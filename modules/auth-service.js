@@ -1,0 +1,119 @@
+const mongoose = require('mongoose'); 
+require('dotenv').config(); 
+let Schema = mongoose.Schema; 
+
+/*
+DEFINING THE userSchema
+Each schema maps to a MongoDB collection 
+Like a blueprint of the documents to be added to the collection
+*/
+let userSchema = new Schema({
+    userName: {
+        type: String, 
+        unique: true, 
+    }, 
+    password: String, 
+    email: String, 
+    loginHistory: [
+        {
+            dateTime: Date, 
+            userAgent: String, 
+        }, 
+    ], 
+}); 
+
+let User; // to be defined on new connection (see 'initialize')
+
+/* functions designed to work w/ the User Object (defined by userSchema) 
+- each function must return a Promise the passes the data using resolve 
+- if error - passes an error message using reject 
+- when accessing these functions from server.js, respond with .then and catch 
+- or with async/await and try/catch 
+*/
+
+initialize = () => {
+    return new Promise(function(resolve, reject) {
+        let db = mongoose.createConnection(process.env.MONGODB); 
+
+        db.on('error', (err) => {
+            reject(err); // reject the promise with the provided error
+        }); 
+
+        db.once('open', () => {
+            User = db.model('users', userSchema); 
+            resolve(); 
+        });
+    });
+}
+
+registerUser = (userData) => {
+    // needs to validate data 
+    // e.g. matching passwords? or username taken? 
+
+    // Assume userData object has properties .userName, .userAgent, .email, .password, .password2
+    // use these fields when creating the register view 
+    
+    // compare .password to .password2 to see if they match 
+    // if not - reject promise with "passwords do not match
+    // if match 
+    // create new User from userData
+    // invoke save function 
+
+    return new Promise((resolve, reject) => {
+        if (userData.password != userData.password2) {
+            reject("Passwords do not match"); 
+        } else { // passwords match 
+            let newUser = new User(userData); 
+            newUser.save().then(() => {
+                resolve(); 
+            }).catch(err => {
+                if (err.code === 11000) {
+                    reject("User Name already taken."); 
+                } else {
+                    reject(`There was an error creating the user: ${err}`); 
+                }
+            }); 
+        }
+    }); 
+} 
+
+checkUser = (userData) => {
+    return new Promise((resolve, reject) => {
+        User.find({ userName: userData.userName })
+        .exec()
+        .then((users) => {
+            if (users.length === 0) { // users is an empty array
+                reject(`Unable to find user: ${userData.userName}`); 
+            } else if (users[0].password != userData.password) {
+                reject(`Incorrect Password for user: ${userData.userName}`); 
+            } else /*if (users[0].password === userData.password)*/ {
+                // check if there are 8 login history items (max) 
+                // if so, pop last element from array 
+                if (users[0].loginHistory.length === 8) {
+                    users[0].loginHistory.pop(); 
+                }
+                
+                users[0].loginHistory.unshift({ 
+                    dateTime: (new Date()).toString(), 
+                    userAgent: userData.userAgent
+                }); 
+
+                //if (users.userName === users[0].userName) {
+                users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }
+                    .exec()
+                    .then(() => {
+                         resolve(users[0]); 
+                    })
+                    .catch(err => {
+                        reject(`There was an error verifying the user: ${err}`); 
+                    })
+                });
+                //}
+            }
+        })
+        // if find promise was rejected 
+        .catch(() => {
+            reject(`Unable to find user: ${userData.userName}`); 
+        })
+    }); 
+}

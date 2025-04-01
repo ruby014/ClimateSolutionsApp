@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <%- include('partials/navbar', {page:'/about'})%>
+      <!-- About Me -->
+      <div class="container mx-auto">
+        <div class="hero bg-base-200 rounded-lg p-6">
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold">About</h1>
+                    <p class="py-6">Everything you want to know about me - the designer and developer of this website.</p>
+                </div>
+            </div>
+        </div>
+        <div class="min-h-screen flex justify-center items-center mt-5 md: mt-5 sm: mb-20 sm: mr-20 sm: ml-20">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+              <!-- Profile Image -->
+              <div class="card bg-base-100 shadow-xl">
+                <img class="w-full rounded-lg" src="https://i.pinimg.com/736x/59/63/d6/5963d6151129790b97644c16822dd827.jpg" alt="profile"/>
+              </div>
+          
+              <!-- About Me Text -->
+              <div class="card bg-base-100">
+                <p>
+                  Hi there! I'm Ruchelle, a second-year computer programming student with a passion for coding and learning new things.
+                  <br><br>
+                  Coming from a nursing background, I’m now diving headfirst into the world of software development. When I’m not cracking code, you’ll find me exploring new tech trends or planning my next outdoor adventure. I love creating full-stack applications that make a difference, and I’m always up for a new challenge!
+                </p>
+              </div>
+            </div>
+          </div>
+          
+
+      </div>
+</body>
+</html>

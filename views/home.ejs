@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Solutions</title>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+    <%- include('partials/navbar', {page:'/'})%>
+      <!-- Title and page description, button to browse -->
+      <div class="container mx-auto">
+        <div class="hero bg-base-200 rounded-lg p-6">
+            <div class="hero-content text-center">
+                <div class="max-w-md">
+                    <h1 class="text-5xl font-bold">Welcome</h1>
+                    <p class="py-6">Browse our current collection of modern solutions to help fight Climate Change.</p>
+                    <a href="/solutions/projects" class="btn btn-primary">Our solutions</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards: Hard coded projects, one from each of the chosen sectors -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md: mt-5 md: mb-5">
+            <!-- Card 1: Industry -->
+            <div class="card bg-base-100 shadow-xl">
+                <figure>
+                    <img
+                    class="w-full" 
+                    src="https://drawdown.org/sites/default/files/solutions2020/solution_alternativecement02.jpg"
+                    alt="cement"/>
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">Alternative Cement</h2>
+                    <p>Conventional cement production is a significant source of carbon dioxide. Reformulation can reduce emissions by millions of metric tons each year.</p>
+                    <div class="card-actions justify-end">
+                        <a class="btn btn-primary" href="/solutions/projects/33">More Information</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Electricity -->
+            <div class="card bg-base-100 shadow-xl">
+                <figure>
+                    <img
+                    class="w-full" 
+                    src="https://drawdown.org/sites/default/files/solutions/solution_concentratedsolar01.jpg"
+                    alt="solar panel"/>
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">Concentrated Solar Power</h2>
+                    <p>Concentrated solar power uses sunlight as a heat source. Arrays of mirrors concentrate incoming rays onto a receiver to heat fluid, produce steam, and turn turbines.</p>
+                    <div class="card-actions justify-end">
+                        <a class="btn btn-primary" href="/solutions/projects/9">More Information</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Transportation -->
+            <div class="card bg-base-100 shadow-xl">
+                <figure>
+                    <img
+                    class="w-full" 
+                    src="https://drawdown.org/sites/default/files/solutions/airplanes-web.jpg"
+                    alt="airplane"/>
+                </figure>
+                <div class="card-body">
+                    <h2 class="card-title">Efficient Aviation</h2>
+                    <p>Technologies and practices that can lower airplane emissions include better engines, wingtips, and reducing airplanes’ weight.</p>
+                    <div class="card-actions justify-end">
+                        <a class="btn btn-primary" href="/solutions/projects/13">More Information</a>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </div>
+
+
+</body>
+</html>

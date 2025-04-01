@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+  <%- include('partials/navbar', {page:'/solutions/projects'})%>
+        <!-- Projects Table -->
+        <div class="container mx-auto p-4">
+          <div class="hero bg-base-200 rounded-lg p-6">
+              <div class="hero-content text-center">
+                  <div class="max-w-lg">
+                      <h1 class="text-5xl font-bold">Projects</h1>
+                      <p class="py-6">
+                        Browse the current list of Projects in our database. Click the theme to filter by sectors such as:
+                        <br><br>
+                        <a href="/solutions/projects?sector=ind" class="btn btn-primary btn-xs">Industry</a>
+                        <a href="/solutions/projects?sector=elec" class="btn btn-primary btn-xs">Electricity</a>
+                        <a href="/solutions/projects?sector=transport" class="btn btn-primary btn-xs">Transportation</a>
+                    </p>
+                  </div>
+              </div>
+        </div>
+        <br>
+        <div class="overflow-x-auto overflow-y-hidden">
+            <!-- Table of projs -->
+            <div class="overflow-x-auto">
+                <table class="table table-zebra">
+                  <tbody>
+                    <% for (const project of projects) {%>
+                        <tr>
+                            <td><span class="font-bold"><%= project.title %></span></td>
+                            <td><a href="/solutions/projects?sector=<%= project.Sector.sector_name%>" class="btn mt-2 btn-xs"><%= project.Sector.sector_name %></a></td>
+                            <td><%= project.summary_short%></td>
+                            <td><a href="/solutions/projects/<%= project.id%>" class="btn mt-2 btn-xs">details</a></td>
+                        </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            
+            <!-- end of table-->
+        </div>
+      </body>

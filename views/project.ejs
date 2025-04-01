@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <script>
+        document.addEventListener("DOMContentLoaded", ()=>{
+        /* TODO: "fetch" the data at: https://dummyjson.com/quotes/random and update an element in the DOM
+        with the "quote" and "author" */
+        fetch('https://dummyjson.com/quotes/random')
+            .then((response) => response.json())
+            .then((json) => {
+                const quote = document.getElementById('quote');
+                const para = document.createElement('p');
+                const author = document.createElement('em');
+
+                para.innerHTML = '"' + json.quote + '"'; 
+                author.innerHTML = '- ' + json.author; 
+
+                quote.appendChild(para);
+                quote.appendChild(author);
+            });
+        });
+    </script>
+</head>
+<body>
+  <%- include('partials/navbar', {page:'/solutions/projects' + project.id})%>
+  <!-- Project Title header-->
+  <div class="container mx-auto p-4">
+    <div class="hero bg-base-200 rounded-lg p-6">
+        <div class="hero-content text-center">
+            <div class="max-w-lg">
+                <h1 class="text-5xl font-bold">
+                    <%= title %>
+                </h1>
+                <p class="py-6">
+                    Below, you will find detailed information about the project:<br><%= title %> 
+                </p>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <!-- Page content: image, etc. -->
+    <div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <img 
+                class="w-full rounded-lg"
+                src="<%= project.feature_img_url%>"
+                alt="image"
+                />
+            </div>
+            <div class="prose">
+                <p><%= project.intro_short%></p>
+                <span class="font-bold">Impact:</span>
+                <br>
+                <p><%= project.impact %></p>
+                <span class="font-bold">More Information: </span>
+                <a href="<%= project.original_source_url%>"><%= project.original_source_url%></a>
+                <br>
+                <span id="quote"></span>
+                <br><br>
+                <a class="btn btn-success btn-sm" href="/solutions/editProject/<%= project.id%>">
+                    Edit Project: <%= project.title %>
+                </a>
+                <a class="btn btn-primary btn-sm" href="#" onclick="history.back(); return false;">
+                    RETURN
+                </a>
+            </div>
+        </div>
+    </div>
+  </div>
+</body>
