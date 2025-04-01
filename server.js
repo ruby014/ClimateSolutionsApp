@@ -113,12 +113,12 @@ projectsContainer.Initialize()
         res.status(404).render("500", { message: "Internal Server Error" }); 
     })
 
-   app.get('/solutions/addProject', async (req, res) => {
+   app.get('/solutions/addProject', ensureLogin, async (req, res) => {
         const sectorData = await projectsContainer.getAllSectors(); 
         res.render("addProject", { sectors: sectorData }); 
    }); 
 
-   app.post('/solutions/addProject', async(req, res) => {
+   app.post('/solutions/addProject', ensureLogin, async(req, res) => {
         try {
             const project = req.body; 
             await projectsContainer.addProject(project); 
@@ -129,7 +129,7 @@ projectsContainer.Initialize()
         
    }); 
 
-  app.get('/solutions/editProject/:id', async (req, res) => {
+  app.get('/solutions/editProject/:id', ensureLogin, async (req, res) => {
     const { id } = req.params; 
     try {
         const [sectorData, projectWithId] = await Promise.all([
@@ -144,7 +144,7 @@ projectsContainer.Initialize()
     }
   }); 
 
-  app.post('/solutions/editProject', async (req, res) => {
+  app.post('/solutions/editProject', ensureLogin, async (req, res) => {
         try {
             const { id } = req.body; 
             const projectData = {...req.body}; 
@@ -159,7 +159,7 @@ projectsContainer.Initialize()
         }
   });
 
-app.get('/solutions/deleteProject/:id', async (req, res) => {
+app.get('/solutions/deleteProject/:id', ensureLogin, async (req, res) => {
     try {
         const { id } = req.params; 
         await projectsContainer.deleteProject(id); 
