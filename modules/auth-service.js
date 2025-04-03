@@ -22,7 +22,7 @@ let userSchema = new Schema({
     ], 
 }); 
 
-let User; // to be defined on new connection (see 'initialize')
+let User = mongoose.model('users', userSchema); // to be defined on new connection (see 'initialize')
 
 /* functions designed to work w/ the User Object (defined by userSchema) 
 - each function must return a Promise the passes the data using resolve 
@@ -33,7 +33,7 @@ let User; // to be defined on new connection (see 'initialize')
 
 let initialize = () => {
     return new Promise(function(resolve, reject) {
-        let db = mongoose.createConnection(process.env.MONGODB); 
+        let db = mongoose.createConnection(process.env.MONGODB_URI); 
 
         db.on('error', (err) => {
             reject(err); // reject the promise with the provided error
