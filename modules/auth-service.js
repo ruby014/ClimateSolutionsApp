@@ -1,5 +1,7 @@
 const mongoose = require('mongoose'); 
+const bcrypt = require('bcryptjs'); 
 require('dotenv').config(); 
+
 let Schema = mongoose.Schema; 
 
 /*
@@ -47,35 +49,32 @@ let initialize = () => {
 }
 
 let registerUser = (userData) => {
-    // needs to validate data 
-    // e.g. matching passwords? or username taken? 
-
-    // Assume userData object has properties .userName, .userAgent, .email, .password, .password2
-    // use these fields when creating the register view 
-    
-    // compare .password to .password2 to see if they match 
-    // if not - reject promise with "passwords do not match
-    // if match 
-    // create new User from userData
-    // invoke save function 
-
     return new Promise((resolve, reject) => {
         if (userData.password != userData.password2) {
             reject("Passwords do not match"); 
-        } else { // passwords match 
-            let newUser = new User(userData); 
-            newUser.save().then(() => {
-                resolve(); 
-            }).catch(err => {
-                if (err.code === 11000) {
-                    reject("User Name already taken."); 
-                } else {
-                    reject(`There was an error creating the user: ${err}`); 
-                }
-            }); 
-        }
-    }); 
-} 
+        } else { // the passwords match 
+            bcrypt.hash(userData.password, 10)
+                .then((hash) =>{ // Hash the password using a Salt that was generated using 10 rounds
+                // TODO: Store the resulting "hash" value in the DB
+                userData.password = hash; 
+                let newUser = new User(userData); 
+                newUser.save()
+                    .then(() => {
+                        resolve(); 
+                    }).catch(err => {
+                        if (err.code === 11000) {
+                            reject("User Name already taken."); 
+                        } else {
+                            reject(`There was an error creating the user: ${err}`); 
+                        }
+                    }); 
+                })
+                .catch(err => {
+                    reject(`There was an error encrypting the password: ${err}`); // Show any errors that occurred during the process
+                });
+            }
+        }); 
+    } 
 
 let checkUser = (userData) => {
     return new Promise((resolve, reject) => {
@@ -84,9 +83,12 @@ let checkUser = (userData) => {
         .then((users) => {
             if (users.length === 0) { // users is an empty array
                 reject(`Unable to find user: ${userData.userName}`); 
-            } else if (users[0].password != userData.password) {
-                reject(`Incorrect Password for user: ${userData.userName}`); 
-            } else if (users[0].password === userData.password) {
+            } 
+
+            bcrypt.compare(userData.password, hash)
+            .then((result) => {
+                if (result) { 
+                // password matches that of the database
                 // check if there are 8 login history items (max) 
                 // if so, pop last element from array 
                 if (users[0].loginHistory.length === 8) {
@@ -99,7 +101,7 @@ let checkUser = (userData) => {
                 }); 
 
                 //if (users.userName === users[0].userName) {
-                users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }
+                users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }})
                     .exec()
                     .then(() => {
                          resolve(users[0]); 
@@ -107,15 +109,48 @@ let checkUser = (userData) => {
                     .catch(err => {
                         reject(`There was an error verifying the user: ${err}`); 
                     })
-                });
-                //}
-            }
-        })
-        // if find promise was rejected 
-        .catch(() => {
+                } else {
+                    reject(`Incorrect Password for user: ${userData.userName}`); 
+                }
+            })
+        }).catch((error) => {
             reject(`Unable to find user: ${userData.userName}`); 
-        })
-    }); 
+        }); 
+    })
 }
+            
+    //         else if (users[0].password != userData.password) {
+    //             reject(`Incorrect Password for user: ${userData.userName}`); 
+    //         } else if (users[0].password === userData.password) {
+    //             // check if there are 8 login history items (max) 
+    //             // if so, pop last element from array 
+    //             if (users[0].loginHistory.length === 8) {
+    //                 users[0].loginHistory.pop(); 
+    //             }
+                
+    //             users[0].loginHistory.unshift({ 
+    //                 dateTime: (new Date()).toString(), 
+    //                 userAgent: userData.userAgent
+    //             }); 
+
+    //             //if (users.userName === users[0].userName) {
+    //             users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }})
+    //                 .exec()
+    //                 .then(() => {
+    //                      resolve(users[0]); 
+    //                 })
+    //                 .catch(err => {
+    //                     reject(`There was an error verifying the user: ${err}`); 
+    //                 })
+                
+    //             //}
+    //         }
+    //     })
+    //     // if find promise was rejected 
+    //     .catch(() => {
+    //         reject(`Unable to find user: ${userData.userName}`); 
+    //     })
+    // }); 
+//}
 
 module.exports = { initialize, registerUser, checkUser }; 

@@ -12,10 +12,11 @@
 *
 ********************************************************************************/
 const authData = require('./modules/auth-service');
-const express = require('express');
 const clientSessions = require('client-sessions'); 
-const app = express(); 
 const projectsContainer = require('./modules/projects'); 
+const express = require('express');
+//const path = require('path'); 
+const app = express(); 
 const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs'); 
@@ -86,16 +87,15 @@ projectsContainer.Initialize()
         req.body.userAgent = req.get('User-Agent'); 
         authData.checkUser(req.body)
         .then((user) => {
-            res.session.user = {
+            req.session.user = {
                 userName: user.userName, 
                 email: user.email, 
                 loginHistory: user.loginHistory
             }
-
             res.redirect('/solutions/projects'); 
         })
         .catch((error) => {
-            res.render('/login', { errorMessage: error, userName: req.body.userName });
+            res.render('login', { errorMessage: error, userName: req.body.userName });
         });
     }); 
 
