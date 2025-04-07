@@ -216,3 +216,5 @@ app.get('/solutions/deleteProject/:id', ensureLogin, async (req, res) => {
         res.render("500", { message: `I'm sorry, but we have encountered the following error: ${error}` });
     }
 }); 
+
+module.exports = app;  // Ensure this export is at the bottom
