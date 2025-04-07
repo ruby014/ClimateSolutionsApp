@@ -24,11 +24,12 @@ app.set('views', __dirname + '/views');
 
 projectsContainer.Initialize()
     .then(authData.initialize)
-    .then(function() {
-        app.listen(PORT, () => {   
-                console.log(`Server is listening on http://localhost:${PORT}`)
-        });
-    }).catch(function(error) {
+    // .then(function() {
+    //     app.listen(PORT, () => {   
+    //         console.log(`Server is listening on http://localhost:${PORT}`)
+    //     });
+    // })
+    .catch(function(error) {
         console.log(`Unable to start server" ${error}`); 
     });
 
@@ -41,7 +42,7 @@ projectsContainer.Initialize()
     app.use(
         clientSessions({
             cookieName: 'session', 
-            secret: process.env.SESSION_SECRET, // generated a  random secret using command node -e console.log(require('crypto').randomBytes(32).toString('hex')), 
+            secret: process.env.SESSION_SECRET, // generated a random secret using command node -e console.log(require('crypto').randomBytes(32).toString('hex')), 
             duration: 4 * 60 * 1000, // duration of session in ms (4 minutes)
             activeDuration: 1000 * 60, // length of time session will be extended by 
         })
