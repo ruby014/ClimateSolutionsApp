@@ -24,11 +24,11 @@ app.set('views', __dirname + '/views');
 
 projectsContainer.Initialize()
     .then(authData.initialize)
-    // .then(function() {
-    //     app.listen(PORT, () => {   
-    //         console.log(`Server is listening on http://localhost:${PORT}`)
-    //     });
-    // })
+    .then(function() {
+        app.listen(PORT, () => {   
+            console.log(`Server is listening on http://localhost:${PORT}`)
+        });
+    })
     .catch(function(error) {
         console.log(`Unable to start server" ${error}`); 
     });
