@@ -2,12 +2,12 @@ require('dotenv').config();
 require('pg'); 
 const Sequelize = require('sequelize'); 
 
-// Set up sequelize to point to our postgres database
+
 const sequelize = new Sequelize(process.env.PG_CONNECTION_STRING, {
     dialect: "postgres",
     dialectOptions: {
       ssl: {
-        require: true, // This will help you connect to the database with SSL
+        require: true, 
         rejectUnauthorized: false, // Allows self-signed certificates
       },
     },

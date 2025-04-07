@@ -1,5 +1,5 @@
 /********************************************************************************
-* WEB322 – Assignment 05
+* WEB322 – Assignment 06
 *
 * I declare that this assignment is my own work in accordance with Seneca's
 * Academic Integrity Policy:
@@ -8,14 +8,13 @@
 *
 * Name: Ruchelle Baybayan 
 * Student ID: 019315159
-* Date: Monday, March 24th 2025
+* Date: Monday, April 7th 2025
 *
 ********************************************************************************/
 const authData = require('./modules/auth-service');
 const clientSessions = require('client-sessions'); 
 const projectsContainer = require('./modules/projects'); 
 const express = require('express');
-//const path = require('path'); 
 const app = express(); 
 const PORT = process.env.PORT || 3000;
 
@@ -43,8 +42,8 @@ projectsContainer.Initialize()
         clientSessions({
             cookieName: 'session', 
             secret: process.env.SESSION_SECRET, // generated a random secret using command node -e console.log(require('crypto').randomBytes(32).toString('hex')), 
-            duration: 4 * 60 * 1000, // duration of session in ms (4 minutes)
-            activeDuration: 1000 * 60, // length of time session will be extended by 
+            duration: 4 * 60 * 1000, 
+            activeDuration: 1000 * 60, 
         })
     ); 
 
@@ -62,7 +61,7 @@ projectsContainer.Initialize()
         if (!req.session.user) { // user not logged in 
             res.redirect('/login'); 
         } else {
-            next(); // moves execution to the next middleware function in the req-response cycle 
+            next(); 
         }
     }
 
@@ -217,4 +216,4 @@ app.get('/solutions/deleteProject/:id', ensureLogin, async (req, res) => {
     }
 }); 
 
-module.exports = app;  // Ensure this export is at the bottom
+module.exports = app;  

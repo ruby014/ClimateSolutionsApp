@@ -24,21 +24,14 @@ let userSchema = new Schema({
     ], 
 }); 
 
-let User = mongoose.model('users', userSchema); // to be defined on new connection (see 'initialize')
-
-/* functions designed to work w/ the User Object (defined by userSchema) 
-- each function must return a Promise the passes the data using resolve 
-- if error - passes an error message using reject 
-- when accessing these functions from server.js, respond with .then and catch 
-- or with async/await and try/catch 
-*/
+let User = mongoose.model('users', userSchema); 
 
 let initialize = () => {
     return new Promise(function(resolve, reject) {
         let db = mongoose.createConnection(process.env.MONGODB_URI); 
 
         db.on('error', (err) => {
-            reject(err); // reject the promise with the provided error
+            reject(err); 
         }); 
 
         db.once('open', () => {
@@ -55,7 +48,6 @@ let registerUser = (userData) => {
         } else { // the passwords match 
             bcrypt.hash(userData.password, 10)
                 .then((hash) =>{ // Hash the password using a Salt that was generated using 10 rounds
-                // TODO: Store the resulting "hash" value in the DB
                 userData.password = hash; 
                 let newUser = new User(userData); 
                 newUser.save()
@@ -81,16 +73,13 @@ let checkUser = (userData) => {
         User.find({ userName: userData.userName })
         .exec()
         .then((users) => {
-            if (users.length == 0) { // users is an empty array
-                reject(`Unable to find user (error1): ${userData.userName}`); 
+            if (users.length == 0) { 
+                reject(`Unable to find user: ${userData.userName}`); 
             } 
 
             bcrypt.compare(userData.password, users[0].password)
             .then((result) => {
                 if (result) { 
-                // password matches that of the database
-                // check if there are 8 login history items (max) 
-                // if so, pop last element from array 
                 if (users[0].loginHistory.length === 8) {
                     users[0].loginHistory.pop(); 
                 }
@@ -100,7 +89,6 @@ let checkUser = (userData) => {
                     userAgent: userData.userAgent
                 }); 
 
-                //if (users.userName === users[0].userName) {
                 users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }})
                     .exec()
                     .then(() => {
@@ -114,7 +102,7 @@ let checkUser = (userData) => {
                 }
             })
         }).catch((error) => {
-            reject(`Unable to find user (error2): ${userData.userName}`); 
+            reject(`Unable to find user: ${userData.userName}`); 
         }); 
     })
 }
