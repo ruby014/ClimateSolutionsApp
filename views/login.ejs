@@ -21,10 +21,10 @@
         <!-- login form -->
         <form action="/login" method="post" class="space-y-4">
             <div class="flex flex-col">
-                <input type="text" name="userName" placeholder="User Name" required value="<%= userName %>">
+                <input type="text" name="userName" placeholder="User Name" required value="<%= userName %>" class="w-full rounded-md px-3 py-2 h-40 bg-gray-100 border border-gray-300">
             </div>
             <div class="flex flex-col">
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required class="w-full rounded-md px-3 py-2 h-40 bg-gray-100 border border-gray-300">
             </div>
             <input type="submit" class="bg-green-500 text-white p-2 rounded-md cursor-pointer hover:bg-green-600 focus:outline-none focus:ring focus:border-blue-500"
             value="Login">

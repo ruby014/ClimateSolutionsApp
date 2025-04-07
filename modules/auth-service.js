@@ -81,11 +81,11 @@ let checkUser = (userData) => {
         User.find({ userName: userData.userName })
         .exec()
         .then((users) => {
-            if (users.length === 0) { // users is an empty array
+            if (users.length == 0) { // users is an empty array
                 reject(`Unable to find user: ${userData.userName}`); 
             } 
 
-            bcrypt.compare(userData.password, hash)
+            bcrypt.compare(userData.password, users[0].password)
             .then((result) => {
                 if (result) { 
                 // password matches that of the database
@@ -118,39 +118,5 @@ let checkUser = (userData) => {
         }); 
     })
 }
-            
-    //         else if (users[0].password != userData.password) {
-    //             reject(`Incorrect Password for user: ${userData.userName}`); 
-    //         } else if (users[0].password === userData.password) {
-    //             // check if there are 8 login history items (max) 
-    //             // if so, pop last element from array 
-    //             if (users[0].loginHistory.length === 8) {
-    //                 users[0].loginHistory.pop(); 
-    //             }
-                
-    //             users[0].loginHistory.unshift({ 
-    //                 dateTime: (new Date()).toString(), 
-    //                 userAgent: userData.userAgent
-    //             }); 
-
-    //             //if (users.userName === users[0].userName) {
-    //             users[0].updateOne({ $set: { loginHistory: users[0].loginHistory }})
-    //                 .exec()
-    //                 .then(() => {
-    //                      resolve(users[0]); 
-    //                 })
-    //                 .catch(err => {
-    //                     reject(`There was an error verifying the user: ${err}`); 
-    //                 })
-                
-    //             //}
-    //         }
-    //     })
-    //     // if find promise was rejected 
-    //     .catch(() => {
-    //         reject(`Unable to find user: ${userData.userName}`); 
-    //     })
-    // }); 
-//}
-
+        
 module.exports = { initialize, registerUser, checkUser }; 

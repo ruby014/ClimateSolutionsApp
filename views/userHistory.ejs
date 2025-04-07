@@ -12,8 +12,8 @@
         <div class="hero bg-base-200 rounded-lg p-6">
             <div class="hero-content text-center">
                 <div class="max-w-md">
-                    <h1 class="text-5xl font-bold"><%= userName %></h1>
-                    <p class="py-6">User History: <%= email %></p>
+                    <h1 class="text-5xl font-bold"><%= session.user.userName %></h1>
+                    <p class="py-6">User History: <%= session.user.email %></p>
                 </div>
             </div>
         </div>
@@ -23,15 +23,19 @@
     dont really know if this is done right - probably not  
     -->
     <table class="table table-zebra">
+        <thead>
+            <tr>
+                <th>Login Date/Time</th>
+                <th>Client Information</th>
+            </tr>
+        </thead>
         <tbody>
-                <tr>
-                    <th>Login Date/Time</th>
-                    <td><%= session.user.loginHistory.dateTime %></td>
-                </tr>
-                <tr>
-                    <th>Client Information</th>
-                    <td><%= session.user.loginHistory.userAgent %></td>
-                </tr>
+            <% session.user.loginHistory.forEach(function(sess) { %>
+            <tr>
+                <td><%= sess.dateTime %></td>
+                <td><%= sess.userAgent %></td>
+            </tr>
+            <% }) %>
         </tbody>
     </table>
     </div>
