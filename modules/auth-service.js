@@ -82,7 +82,7 @@ let checkUser = (userData) => {
         .exec()
         .then((users) => {
             if (users.length == 0) { // users is an empty array
-                reject(`Unable to find user: ${userData.userName}`); 
+                reject(`Unable to find user (error1): ${userData.userName}`); 
             } 
 
             bcrypt.compare(userData.password, users[0].password)
@@ -114,7 +114,7 @@ let checkUser = (userData) => {
                 }
             })
         }).catch((error) => {
-            reject(`Unable to find user: ${userData.userName}`); 
+            reject(`Unable to find user (error2): ${userData.userName}`); 
         }); 
     })
 }
