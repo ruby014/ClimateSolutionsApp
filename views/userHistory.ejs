@@ -32,7 +32,7 @@
         <tbody>
             <% session.user.loginHistory.forEach(function(sess) { %>
             <tr>
-                <td><%= sess.dateTime %></td>
+                <td><%= sess.dateTime.toString() %></td>
                 <td><%= sess.userAgent %></td>
             </tr>
             <% }) %>
