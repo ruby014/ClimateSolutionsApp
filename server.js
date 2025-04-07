@@ -216,4 +216,4 @@ app.get('/solutions/deleteProject/:id', ensureLogin, async (req, res) => {
     }
 }); 
 
-module.exports = app;  
+module.exports = app;  // added for vercel deployment to work 
